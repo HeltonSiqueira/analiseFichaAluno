@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SENAI 8.90</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Fontes -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+        rel="stylesheet"
+    >
+
+    <!-- CSS próprio -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <!-- Configuração Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+
+            theme: {
+                extend: {
+
+                    colors: {
+                        primary: "#003fb1",
+                        "primary-container": "#1a56db",
+                        background: "#faf8ff",
+                        surface: "#faf8ff",
+                        "surface-container-low": "#f3f3fe",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-surface": "#2e3039",
+                        "on-surface": "#191b23",
+                        "on-surface-variant": "#434654",
+                        "outline-variant": "#c3c5d7",
+                        outline: "#737686",
+                        secondary: "#585f6c",
+                        error: "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff"
+                    },
+
+                    fontFamily: {
+                        sans: ["Inter"]
+                    }
+
+                }
+            }
+        }
+    </script>
+
+</head>
+
+
+<body class="bg-background text-on-surface min-h-screen flex flex-col font-sans">
+
+
+    <!-- ===================================================== -->
+    <!-- NAVBAR -->
+    <!-- ===================================================== -->
+
+    <header class="bg-surface border-b border-outline-variant shadow-sm">
+
+        <div class="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
+
+            <div class="text-2xl font-bold text-primary">
+                SENAI Mirassol CT 8.90
+            </div>
+
+            <button
+                id="theme-toggle"
+                type="button"
+                class="p-2 rounded-full hover:bg-surface-container-low"
+            >
+                <span class="material-symbols-outlined">
+                    dark_mode
+                </span>
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- ===================================================== -->
+    <!-- PRINCIPAL -->
+    <!-- ===================================================== -->
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-8 py-12">
+
+        <div class="text-center mb-12">
+
+            <h1 class="text-3xl font-semibold mb-3">
+                Upload de Ficha de Aluno
+            </h1>
+
+            <p class="text-lg text-on-surface-variant max-w-2xl mx-auto">
+                Carregue o documento digitalizado ou fotografe
+                a ficha do aluno.
+                O sistema extrairá os dados automaticamente
+                para validação.
+            </p>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- UPLOAD -->
+        <!-- ================================================= -->
+
+        <div class="max-w-3xl mx-auto mb-12">
+
+            <div
+                id="drop-zone"
+                class="
+                    border-2
+                    border-dashed
+                    border-outline-variant
+                    bg-white
+                    rounded-xl
+                    p-12
+                    min-h-[300px]
+                    flex
+                    flex-col
+                    items-center
+                    justify-center
+                    text-center
+                    cursor-pointer
+                    hover:border-primary
+                    transition
+                    shadow-sm
+                "
+            >
+
+                <div class="bg-surface-container-low p-4 rounded-full mb-4">
+
+                    <span class="material-symbols-outlined text-primary text-5xl">
+                        upload_file
+                    </span>
+
+                </div>
+
+
+                <h2 class="text-2xl font-semibold mb-2">
+                    Arraste a ficha do aluno aqui
+                </h2>
+
+
+                <p class="text-on-surface-variant mb-6">
+                    ou selecione um arquivo ou tire uma foto
+                </p>
+
+
+                <div class="flex flex-col sm:flex-row gap-4">
+
+                    <!-- Selecionar arquivo -->
+
+                    <button
+                        id="btn-selecionar"
+                        type="button"
+                        class="
+                            bg-primary
+                            text-white
+                            px-5
+                            py-3
+                            rounded
+                            hover:bg-primary-container
+                            flex
+                            items-center
+                            justify-center
+                            gap-2
+                        "
+                    >
+
+                        <span class="material-symbols-outlined">
+                            upload_file
+                        </span>
+
+                        Selecionar Arquivo
+
+                    </button>
+
+
+                    <!-- Câmera -->
+
+                    <button
+                        id="btn-camera"
+                        type="button"
+                        class="
+                            border
+                            border-primary
+                            text-primary
+                            px-5
+                            py-3
+                            rounded
+                            flex
+                            items-center
+                            justify-center
+                            gap-2
+                            hover:bg-surface-container-low
+                        "
+                    >
+
+                        <span class="material-symbols-outlined">
+                            photo_camera
+                        </span>
+
+                        Tirar Foto
+
+                    </button>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- INPUT ARQUIVO -->
+                <!-- ================================================= -->
+
+                <input
+                    id="file-input"
+                    type="file"
+                    accept=".pdf,.png,.jpg,.jpeg"
+                    class="hidden"
+                >
+
+
+                <!-- ================================================= -->
+                <!-- INPUT CÂMERA -->
+                <!-- capture=environment tenta usar câmera traseira -->
+                <!-- ================================================= -->
+
+                <input
+                    id="camera-input"
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    class="hidden"
+                >
+
+
+                <!-- Arquivo selecionado -->
+
+                <div
+                    id="arquivo-selecionado"
+                    class="
+                        hidden
+                        mt-6
+                        text-sm
+                        text-on-surface-variant
+                    "
+                >
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- STATUS -->
+        <!-- ================================================= -->
+
+        <div
+            id="status-area"
+            class="
+                hidden
+                max-w-3xl
+                mx-auto
+                mb-8
+                bg-surface-container-low
+                border
+                border-outline-variant
+                rounded-xl
+                p-4
+            "
+        >
+
+            <div class="flex items-center gap-3">
+
+                <span
+                    id="status-icon"
+                    class="material-symbols-outlined text-primary"
+                >
+                    hourglass_top
+                </span>
+
+                <span id="status-text">
+                    Processando documento...
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- RESULTADOS -->
+        <!-- ================================================= -->
+
+        <section
+            id="data-visualization"
+            class="hidden max-w-5xl mx-auto"
+        >
+
+            <div
+                class="
+                    flex
+                    flex-col
+                    sm:flex-row
+                    sm:items-center
+                    justify-between
+                    border-b
+                    border-outline-variant
+                    pb-3
+                    mb-6
+                    gap-2
+                "
+            >
+
+                <h2 class="text-2xl font-semibold">
+                    Dados Extraídos
+                </h2>
+
+                <span class="text-sm text-on-surface-variant">
+                    Revise os dados antes de salvar
+                </span>
+
+            </div>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+                <!-- ================================================= -->
+                <!-- IDENTIFICAÇÃO -->
+                <!-- ================================================= -->
+
+                <div class="bg-white border rounded-xl p-6 shadow-sm">
+
+                    <h3 class="font-semibold mb-5 flex items-center gap-2">
+
+                        <span class="material-symbols-outlined">
+                            person
+                        </span>
+
+                        Identificação do Aluno
+
+                    </h3>
+
+
+                    <div class="space-y-4">
+
+
+                        <!-- Nome -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="nome"
+                            >
+                                Nome
+                            </label>
+
+                            <input
+                                id="nome"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-nome"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- CPF -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="cpf"
+                            >
+                                CPF
+                            </label>
+
+                            <input
+                                id="cpf"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-cpf"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- RG -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="rg"
+                            >
+                                RG
+                            </label>
+
+                            <input
+                                id="rg"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-rg"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Data nascimento -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="data-nascimento"
+                            >
+                                Data de nascimento
+                            </label>
+
+                            <input
+                                id="data-nascimento"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-data-nascimento"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Sexo -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="sexo"
+                            >
+                                Sexo
+                            </label>
+
+                            <input
+                                id="sexo"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-sexo"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Nacionalidade -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="nacionalidade"
+                            >
+                                Nacionalidade
+                            </label>
+
+                            <input
+                                id="nacionalidade"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-nacionalidade"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Naturalidade -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="naturalidade"
+                            >
+                                Naturalidade
+                            </label>
+
+                            <input
+                                id="naturalidade"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-naturalidade"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- ACADÊMICOS -->
+                <!-- ================================================= -->
+
+                <div class="bg-white border rounded-xl p-6 shadow-sm">
+
+                    <h3 class="font-semibold mb-5 flex items-center gap-2">
+
+                        <span class="material-symbols-outlined">
+                            school
+                        </span>
+
+                        Dados Acadêmicos
+
+                    </h3>
+
+
+                    <div class="space-y-4">
+
+
+                        <!-- Curso -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="curso"
+                            >
+                                Curso
+                            </label>
+
+                            <input
+                                id="curso"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-curso"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Turma -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="turma"
+                            >
+                                Turma
+                            </label>
+
+                            <input
+                                id="turma"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-turma"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Matrícula -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="matricula"
+                            >
+                                Matrícula
+                            </label>
+
+                            <input
+                                id="matricula"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-matricula"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Pai -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="nome-pai"
+                            >
+                                Nome do Pai
+                            </label>
+
+                            <input
+                                id="nome-pai"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-nome-pai"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Mãe -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="nome-mae"
+                            >
+                                Nome da Mãe
+                            </label>
+
+                            <input
+                                id="nome-mae"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-nome-mae"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- CONTATO -->
+                <!-- ================================================= -->
+
+                <div
+                    class="
+                        md:col-span-2
+                        bg-white
+                        border
+                        rounded-xl
+                        p-6
+                        shadow-sm
+                    "
+                >
+
+                    <h3 class="font-semibold mb-5 flex items-center gap-2">
+
+                        <span class="material-symbols-outlined">
+                            contact_mail
+                        </span>
+
+                        Informações de Contato
+
+                    </h3>
+
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+
+                        <!-- Telefone -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="telefone"
+                            >
+                                Telefone
+                            </label>
+
+                            <input
+                                id="telefone"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-telefone"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Celular -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="celular"
+                            >
+                                Celular
+                            </label>
+
+                            <input
+                                id="celular"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-celular"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- E-mail -->
+
+                        <div class="md:col-span-2">
+
+                            <label
+                                class="campo-label"
+                                for="email"
+                            >
+                                E-mail
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-email"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- ENDEREÇO -->
+                <!-- ================================================= -->
+
+                <div
+                    class="
+                        md:col-span-2
+                        bg-white
+                        border
+                        rounded-xl
+                        p-6
+                        shadow-sm
+                    "
+                >
+
+                    <h3 class="font-semibold mb-5 flex items-center gap-2">
+
+                        <span class="material-symbols-outlined">
+                            home
+                        </span>
+
+                        Endereço
+
+                    </h3>
+
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+
+                        <!-- CEP -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="cep"
+                            >
+                                CEP
+                            </label>
+
+                            <input
+                                id="cep"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-cep"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Logradouro -->
+
+                        <div class="md:col-span-2">
+
+                            <label
+                                class="campo-label"
+                                for="logradouro"
+                            >
+                                Logradouro
+                            </label>
+
+                            <input
+                                id="logradouro"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-logradouro"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Número -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="numero"
+                            >
+                                Número
+                            </label>
+
+                            <input
+                                id="numero"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-numero"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Bairro -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="bairro"
+                            >
+                                Bairro
+                            </label>
+
+                            <input
+                                id="bairro"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-bairro"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Município -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="municipio"
+                            >
+                                Município
+                            </label>
+
+                            <input
+                                id="municipio"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-municipio"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <!-- Estado -->
+
+                        <div>
+
+                            <label
+                                class="campo-label"
+                                for="estado"
+                            >
+                                Estado
+                            </label>
+
+                            <input
+                                id="estado"
+                                type="text"
+                                class="campo-input"
+                            >
+
+                            <div
+                                id="confidence-estado"
+                                class="confidence-info"
+                            >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- BOTÕES -->
+            <!-- ================================================= -->
+
+            <div
+                class="
+                    flex
+                    flex-col
+                    sm:flex-row
+                    justify-end
+                    gap-4
+                    mt-8
+                "
+            >
+
+                <button
+                    id="btn-reescanear"
+                    type="button"
+                    class="
+                        border
+                        border-outline
+                        px-5
+                        py-3
+                        rounded
+                        hover:bg-surface-container-low
+                    "
+                >
+                    Re-escanear Documento
+                </button>
+
+
+                <button
+                    id="btn-salvar"
+                    type="button"
+                    class="
+                        bg-primary
+                        text-white
+                        px-5
+                        py-3
+                        rounded
+                        hover:bg-primary-container
+                    "
+                >
+                    Salvar Ficha
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ===================================================== -->
+    <!-- FOOTER -->
+    <!-- ===================================================== -->
+
+    <footer
+        class="
+            bg-surface-container-low
+            border-t
+            border-outline-variant
+            mt-auto
+            p-6
+            text-center
+            text-sm
+            text-on-surface-variant
+        "
+    >
+        © 2026 EduSheet Manager.
+        Sistema de Gestão Educacional.
+    </footer>
+
+
+    <!-- JavaScript -->
+
+    <script
+        src="{{ url_for('static', filename='js/app.js') }}"
+    ></script>
+
+</body>
+
+</html>

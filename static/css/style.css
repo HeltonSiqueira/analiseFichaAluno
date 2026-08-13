@@ -1,0 +1,74 @@
+.drag-active {
+    border-color: #003fb1;
+    background-color: #f3f3fe;
+}
+
+.upload-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.campo-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #434654;
+}
+
+.campo-input {
+    width: 100%;
+    border: 1px solid #c3c5d7;
+    border-radius: 6px;
+    padding: 10px 12px;
+    background-color: #ffffff;
+    color: #191b23;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background-color 0.2s;
+}
+
+.campo-input:focus {
+    outline: none;
+    border-color: #003fb1;
+    box-shadow: 0 0 0 2px rgba(0, 63, 177, 0.15);
+}
+
+.confidence-info {
+    margin-top: 4px;
+    min-height: 18px;
+    font-size: 12px;
+}
+
+.confidence-high {
+    color: #18794e;
+}
+
+.confidence-medium {
+    color: #946200;
+}
+
+.confidence-low {
+    color: #ba1a1a;
+    font-weight: 600;
+}
+
+.confidence-empty {
+    color: #737686;
+    font-style: italic;
+}
+
+.campo-baixa-confianca {
+    border-color: #ba1a1a !important;
+    background-color: #fff8f7;
+}
+
+.campo-nao-identificado {
+    border-style: dashed !important;
+    background-color: #fafafa;
+}
+
+#status-area {
+    transition: all 0.2s ease;
+}
